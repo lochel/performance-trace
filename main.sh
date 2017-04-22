@@ -16,5 +16,14 @@ COMMITS=$(git log HEAD..origin/HEAD --format='%H' | tac)
 for COMMIT in $COMMITS
 do
   echo $COMMIT
+  git checkout $COMMIT
+  git submodule update --recursive
+
+  VERSION_OpenModelica="OpenModelica $(git describe --match "v*.*" --always)"
+  cd OMCompiler
+  VERSION_OMCompiler="OMCompiler $(git describe --match "v*.*" --always)"
+  cd ..
+  echo $VERSION_OpenModelica
+  echo $VERSION_OMCompiler
 done
 cd ..
