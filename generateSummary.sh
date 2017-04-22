@@ -30,7 +30,7 @@ do
     for FILE in $FILES
     do
       echo -n "<tr><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=OpenModelica-).*')</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=OMCompiler-).*')</a></td>" >> $HTML_FILE
-      echo -n "$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=OpenModelica-).*') " >> temp.dat
+      echo -n "$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*') " >> temp.dat
       grep "Notification: Performance of $PHASE: time" $FILE | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
       do
         echo -n "<td>$LINE</td>" >> $HTML_FILE
