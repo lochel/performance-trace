@@ -2,7 +2,7 @@
 # author: Lennart Ochel
 
 # clone OpenModelica
-if [ -d "OpenModelica" ]; then
+if [ ! -d "OpenModelica" ]; then
   git clone https://openmodelica.org/git-readonly/OpenModelica.git OpenModelica
   cd OpenModelica
   git submodule update --init --recursive libraries OMCompiler common
