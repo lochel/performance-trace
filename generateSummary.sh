@@ -25,7 +25,7 @@ do
     echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
     echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
     echo "<table border=\"1\">" >> $HTML_FILE
-    echo "<td>OpenModelica</td><td>OMCompiler</td><td>time</td><td></td><td>allocations</td><td></td><td>free</td><td></td>" >> $HTML_FILE
+    echo "<td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
     echo -n > temp.dat
     for FILE in $FILES
     do
