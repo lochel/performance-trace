@@ -18,7 +18,7 @@ do
   echo "<h2>Summary</h2>" >> $HTML_FILE
   echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
   echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
-  grep "Notification: Performance of" $FIRST_FILE | grep -o -P '(?<=Notification: Performance of ).*(?=: time)' | while read PHASE
+  grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
   do
     echo "<h2>$PHASE</h2>" >> $HTML_FILE
     ID=$((ID+1))
