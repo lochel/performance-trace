@@ -36,8 +36,10 @@ do
   git submodule update --recursive
 
   VERSION_OpenModelica="OpenModelica-$(git describe --match "v*.*" --always)"
+  TIME_OpenModelica=$(git show -s --format='OpenModelica-timestamp: %at')
   cd OMCompiler
   VERSION_OMCompiler="OMCompiler-$(git describe --match "v*.*" --always)"
+  TIME_OMCompiler=$(git show -s --format='OMCompiler-timestamp: %at')
   cd ..
 
   # build OpenModelica
@@ -62,8 +64,10 @@ do
     date >> $DUMP_FILE
     echo $VERSION_OpenModelica >> $DUMP_FILE
     echo $VERSION_OMCompiler >> $DUMP_FILE
+    echo $TIME_OpenModelica >> $DUMP_FILE
+    echo $TIME_OMCompiler >> $DUMP_FILE
     ../OpenModelica/build/bin/omc --version >> $DUMP_FILE
-    ../OpenModelica/build/bin/omc ../$TEST.mos >> $DUMP_FILE
+    ../OpenModelica/build/bin/omc -n=1 ../$TEST.mos >> $DUMP_FILE
     cd ..
     rm temp -rf
   done # TEST
