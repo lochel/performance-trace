@@ -44,7 +44,7 @@ do
   make clean
   autoconf
   ./configure CC=gcc CXX=g++ 'OMPCC=gcc -fopenmp' 'CFLAGS=-O2 -march=native' --without-omc --with-omlibrary=core
-  time make omc omlibrary-core -j$NUM_THREADS
+  time make omc omlibrary-all -j$NUM_THREADS
   cd ..
 
   echo $VERSION_OpenModelica
