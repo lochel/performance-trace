@@ -44,14 +44,14 @@ do
     echo >> temp.dat
     echo -n "</tr>" >> $filename
   done
-  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-$id.png'; plot 'temp.dat' using 1 notitle with linespoints;"
-  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-$id.png'; plot 'temp.dat' using 3 notitle with linespoints;"
+  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-$id.png'; set yrange [0:*]; plot 'temp.dat' using 1 notitle with linespoints;"
+  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-$id.png'; set yrange [0:*]; plot 'temp.dat' using 3 notitle with linespoints;"
 
   echo "</table>" >> $filename
 done
 
 # generate summary plots
-gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-0.png'; plot 'temp.dat' using 2 notitle with linespoints;"
-gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-0.png'; plot 'temp.dat' using 4 notitle with linespoints;"
+gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-0.png'; set yrange [0:*]; plot 'temp.dat' using 2 notitle with linespoints;"
+gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-0.png'; set yrange [0:*]; plot 'temp.dat' using 4 notitle with linespoints;"
 
 echo "</body></html>" >> $filename
