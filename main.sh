@@ -12,7 +12,10 @@ if [ ! -d "OpenModelica" ]; then
 fi
 
 TESTS=$(ls *.mos | rev | cut -c 5- | rev)
-mkdir -p dumps
+for TEST in $TESTS
+do
+  mkdir -p dumps/$TEST/
+done
 
 export OPENMODELICAHOME=$PWD/OpenModelica/build/
 export OPENMODELICALIBRARY=$OPENMODELICAHOME/lib/omlibrary/
@@ -52,10 +55,10 @@ do
   for TEST in $TESTS
   do
     echo Start testing $TEST with OpenModelica $COMMIT
-    mkdir -p temp
+    mkdir -p temp/
     cd temp
-    ../loadControl.sh 0.3
-    DUMP_FILE=../dumps/$TEST-$VERSION_OpenModelica.txt
+    ../loadControl.sh 0.5
+    DUMP_FILE=../dumps/$TEST/$TEST-$VERSION_OpenModelica.txt
     date >> $DUMP_FILE
     echo $VERSION_OpenModelica >> $DUMP_FILE
     echo $VERSION_OMCompiler >> $DUMP_FILE

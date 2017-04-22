@@ -2,16 +2,19 @@
 # author: Lennart Ochel
 
 TESTS=$(ls *.mos | rev | cut -c 5- | rev)
-mkdir -p summary
+for TEST in $TESTS
+do
+  mkdir -p summary/$TEST/
+done
 
 for TEST in $TESTS
 do
-  HTML_FILE=summary/$TEST.html
+  HTML_FILE=summary/$TEST/$TEST.html
   echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
   echo "model: $TEST" >> $HTML_FILE
 
-  FILES=$(ls dumps/$TEST-*.txt | sort -n)
+  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n)
   FIRST_FILE=$(echo $FILES | awk '{print $1;}')
   ID=0
 
@@ -45,15 +48,15 @@ do
       echo >> temp.dat
       echo -n "</tr>" >> $HTML_FILE
     done
-    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 1 notitle with linespoints;"
-    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 3 notitle with linespoints;"
+    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 1 notitle with linespoints;"
+    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 3 notitle with linespoints;"
 
     echo "</table>" >> $HTML_FILE
   done
 
   # generate summary plots
-  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-0.png'; set yrange [0:*]; plot 'temp.dat' using 2 notitle with linespoints;"
-  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-0.png'; set yrange [0:*]; plot 'temp.dat' using 4 notitle with linespoints;"
+  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set yrange [0:*]; plot 'temp.dat' using 2 notitle with linespoints;"
+  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set yrange [0:*]; plot 'temp.dat' using 4 notitle with linespoints;"
 
   echo "</body></html>" >> $HTML_FILE
 done # TEST
