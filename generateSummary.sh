@@ -46,15 +46,15 @@ do
       echo >> temp.dat
       echo -n "</tr>" >> $HTML_FILE
     done
-    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-$ID.png'; set xtics rotate; set yrange [0:*]; plot 'temp.dat' using 2:xtic(1) notitle with linespoints;"
-    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-$ID.png'; set xtics rotate; set yrange [0:*]; plot 'temp.dat' using 4:xtic(1) notitle with linespoints;"
+    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:2 notitle with lines;"
+    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:4 notitle with lines;"
 
     echo "</table>" >> $HTML_FILE
   done
 
   # generate summary plots
-  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set xtics rotate; set yrange [0:*]; plot 'temp.dat' using 3:xtic(1) notitle with linespoints;"
-  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set xtics rotate; set yrange [0:*]; plot 'temp.dat' using 5:xtic(1) notitle with linespoints;"
+  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:3 notitle with lines;"
+  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:5 notitle with lines;"
 
   echo "</body></html>" >> $HTML_FILE
 done # TEST
