@@ -1,6 +1,8 @@
 #!/bin/bash
 # author: Lennart Ochel
 
+NUM_THREADS=12
+
 # clone OpenModelica
 if [ ! -d "OpenModelica" ]; then
   git clone https://openmodelica.org/git-readonly/OpenModelica.git OpenModelica
@@ -50,7 +52,7 @@ do
     mkdir -p temp
     cd temp
     ../loadControl.sh 0.3
-    DUMP_FILE=../dumps/$TEST-$REVISION_OpenModelica.txt
+    DUMP_FILE=../dumps/$TEST-$VERSION_OpenModelica.txt
     date >> $DUMP_FILE
     echo $VERSION_OpenModelica >> $DUMP_FILE
     echo $VERSION_OMCompiler >> $DUMP_FILE
@@ -58,10 +60,10 @@ do
     ../OpenModelica/build/bin/omc ../$TEST.mos >> $DUMP_FILE
     cd ..
     rm temp -rf
-
-    # generate summary
-    ./generateSummary.sh && cp summary/ ../public_html/ -rf
   done # TEST
+
+  # generate summary
+  ./generateSummary.sh && cp summary/ ../public_html/ -rf
 done # COMMIT
 
 # generate summary
