@@ -14,6 +14,9 @@ fi
 TESTS=$(ls *.mos | rev | cut -c 5- | rev)
 mkdir -p dumps
 
+export OPENMODELICAHOME=$PWD/OpenModelica/build/
+export OPENMODELICALIBRARY=$OPENMODELICAHOME/lib/omlibrary/
+
 # find all new commits
 cd OpenModelica
 git fetch --recurse-submodules
