@@ -1,57 +1,59 @@
 #!/bin/bash
 # author: Lennart Ochel
 
-TEST=Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.fullRobot
+TESTS=$(ls *.mos | rev | cut -c 5- | rev)
 mkdir -p summary
 
-filename=summary/$TEST.html
-echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $filename
-echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $filename
-echo "model: $TEST" >> $filename
-
-files=$(ls dumps/$TEST-v1.12.0-dev-* | sort -n)
-firstFile=$(echo $files | awk '{print $1;}')
-phases=$(grep "Notification: Performance of" $firstFile | grep -o -P '(?<=Notification: Performance of ).*(?=: time)')
-id=0
-
-echo "<h2>Summary</h2>" >> $filename
-echo "<img src=\"$TEST-time-$id.png\">" >> $filename
-echo "<img src=\"$TEST-allocations-$id.png\">" >> $filename
-grep "Notification: Performance of" $firstFile | grep -o -P '(?<=Notification: Performance of ).*(?=: time)' | while read phase
+for TEST in $TESTS
 do
-  echo "<h2>$phase</h2>" >> $filename
-  id=$((id+1))
-  echo "<img src=\"$TEST-time-$id.png\">" >> $filename
-  echo "<img src=\"$TEST-allocations-$id.png\">" >> $filename
-  echo "<table border=\"1\">" >> $filename
-  echo "<td>OpenModelica</td><td>OMCompiler</td><td>time</td><td></td><td>allocations</td><td></td><td>free</td><td></td>" >> $filename
-  echo -n > temp.dat
-  for file in $files
+  HTML_FILE=summary/$TEST.html
+  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
+  echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
+  echo "model: $TEST" >> $HTML_FILE
+
+  FILES=$(ls dumps/$TEST-*.txt | sort -n)
+  FIRST_FILE=$(echo $FILES | awk '{print $1;}')
+  ID=0
+
+  echo "<h2>Summary</h2>" >> $HTML_FILE
+  echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
+  echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
+  grep "Notification: Performance of" $FIRST_FILE | grep -o -P '(?<=Notification: Performance of ).*(?=: time)' | while read PHASE
   do
-    echo -n "<tr><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(echo $file | grep -o -P '(?<=-g).*(?=.txt)')\">$(echo $file | grep -o -P '(?<='$TEST'-).*(?=.txt)')</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler $file | head -n1 | cut -b 12- | grep -o -P '(?<=-g).*')\">$(grep OMCompiler $file | head -n1 | cut -b 12-)</a></td>" >> $filename
-    grep "Notification: Performance of $phase: time" $file | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read line
+    echo "<h2>$PHASE</h2>" >> $HTML_FILE
+    ID=$((ID+1))
+    echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
+    echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
+    echo "<table border=\"1\">" >> $HTML_FILE
+    echo "<td>OpenModelica</td><td>OMCompiler</td><td>time</td><td></td><td>allocations</td><td></td><td>free</td><td></td>" >> $HTML_FILE
+    echo -n > temp.dat
+    for FILE in $FILES
     do
-      echo -n "<td>$line</td>" >> $filename
-      # handle units
-      line=$(echo $line | sed '
-        s/[eE]+*/\*10\^/g;
-        s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) kB/\1*1000/g;
-        s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) MB/\1*1000000/g;
-        s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) GB/\1*1000000000/g;
-        s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) TB/\1*1000000000000/g' | bc -l)
-      echo -n "$line " >> temp.dat
+      echo -n "<tr><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(echo $FILE | grep -o -P '(?<=-g).*(?=.txt)')\">$(echo $FILE | grep -o -P '(?<='$TEST'-).*(?=.txt)')</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler $FILE | head -n1 | cut -b 12- | grep -o -P '(?<=-g).*')\">$(grep OMCompiler $FILE | head -n1 | cut -b 12-)</a></td>" >> $HTML_FILE
+      grep "Notification: Performance of $PHASE: time" $FILE | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
+      do
+        echo -n "<td>$LINE</td>" >> $HTML_FILE
+        # handle units
+        LINE=$(echo $LINE | sed '
+          s/[eE]+*/\*10\^/g;
+          s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) kB/\1*1000/g;
+          s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) MB/\1*1000000/g;
+          s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) GB/\1*1000000000/g;
+          s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) TB/\1*1000000000000/g' | bc -l)
+        echo -n "$LINE " >> temp.dat
+      done
+      echo >> temp.dat
+      echo -n "</tr>" >> $HTML_FILE
     done
-    echo >> temp.dat
-    echo -n "</tr>" >> $filename
+    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 1 notitle with linespoints;"
+    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-$ID.png'; set yrange [0:*]; plot 'temp.dat' using 3 notitle with linespoints;"
+
+    echo "</table>" >> $HTML_FILE
   done
-  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-$id.png'; set yrange [0:*]; plot 'temp.dat' using 1 notitle with linespoints;"
-  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-$id.png'; set yrange [0:*]; plot 'temp.dat' using 3 notitle with linespoints;"
 
-  echo "</table>" >> $filename
-done
+  # generate summary plots
+  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-0.png'; set yrange [0:*]; plot 'temp.dat' using 2 notitle with linespoints;"
+  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-0.png'; set yrange [0:*]; plot 'temp.dat' using 4 notitle with linespoints;"
 
-# generate summary plots
-gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-time-0.png'; set yrange [0:*]; plot 'temp.dat' using 2 notitle with linespoints;"
-gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST-allocations-0.png'; set yrange [0:*]; plot 'temp.dat' using 4 notitle with linespoints;"
-
-echo "</body></html>" >> $filename
+  echo "</body></html>" >> $HTML_FILE
+done # TEST
