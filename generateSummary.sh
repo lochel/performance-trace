@@ -11,19 +11,32 @@ do
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
   echo "model: $TEST" >> $HTML_FILE
 
-  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n)
+  HTML_FILE_SUMMARY=summary/$TEST/$TEST-summary.html
+  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE_SUMMARY
+  echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
+  echo "model: $TEST" >> $HTML_FILE_SUMMARY
+
+  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n | tail -n20)
   FIRST_FILE=$(echo $FILES | awk '{print $1;}')
   ID=0
 
   echo "<h2>Summary</h2>" >> $HTML_FILE
   echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
   echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
+
+  echo "<h2>Summary</h2>" >> $HTML_FILE_SUMMARY
+  echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE_SUMMARY
+  echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE_SUMMARY
+
   grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
   do
     echo "<h2>$PHASE</h2>" >> $HTML_FILE
+    echo "<h2>$PHASE</h2>" >> $HTML_FILE_SUMMARY
     ID=$((ID+1))
     echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
     echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
+    echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE_SUMMARY
+    echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE_SUMMARY
     echo "<table border=\"1\">" >> $HTML_FILE
     echo "<td>date</td><td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
     echo -n > temp.dat
@@ -43,19 +56,20 @@ do
           s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) GB/\1*1000000000/g;
           s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) TB/\1*1000000000000/g' | bc -l)
         echo -n "$LINE " >> temp.dat
-      done
+      done # LINE
       echo >> temp.dat
       echo -n "</tr>" >> $HTML_FILE
-    done
+    done # FILE
     gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:2 notitle with lines;"
     gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:4 notitle with lines;"
 
     echo "</table>" >> $HTML_FILE
-  done
+  done # PHASE
 
   # generate summary plots
   gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:3 notitle with lines;"
   gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:5 notitle with lines;"
 
   echo "</body></html>" >> $HTML_FILE
+  echo "</body></html>" >> $HTML_FILE_SUMMARY
 done # TEST
