@@ -1,7 +1,12 @@
 #!/bin/bash
 # author: Lennart Ochel
 
+echo "Generating reports"
+
 TESTS=$(ls *.mos | rev | cut -c 5- | rev)
+
+HTML_ROOT=summary/summary.html
+echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_ROOT
 
 for TEST in $TESTS
 do
@@ -16,7 +21,11 @@ do
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
   echo "model: $TEST" >> $HTML_FILE_SUMMARY
 
-  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n | tail -n20)
+  echo "<h1>$TEST</h1>" >> $HTML_ROOT
+  echo "<a href=\"/$TEST/$TEST-summary.html\"><img src=\"$TEST-time-0.png\"></a>" >> $HTML_ROOT
+  echo "<a href=\"/$TEST/$TEST-summary.html\"><img src=\"$TEST-allocations-0.png\"></a>" >> $HTML_ROOT
+
+  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n)
   FIRST_FILE=$(echo $FILES | awk '{print $1;}')
   ID=0
 
@@ -70,6 +79,7 @@ do
   gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:3 notitle with lines;"
   gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:5 notitle with lines;"
 
+  echo "</body></html>" >> $HTML_ROOT
   echo "</body></html>" >> $HTML_FILE
   echo "</body></html>" >> $HTML_FILE_SUMMARY
 done # TEST
