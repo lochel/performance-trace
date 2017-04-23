@@ -1,4 +1,4 @@
 loadModel(ScalableTestSuite); getErrorString();
 setCommandLineOptions("-d=execstat"); getErrorString();
-//translateModel(Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.fullRobot); getErrorString();
-buildModel(ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_2560); getErrorString();
+translateModel(ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_2560); getErrorString();
+//buildModel(ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_2560); getErrorString();
