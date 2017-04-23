@@ -71,10 +71,7 @@ do
     cd ..
     rm temp -rf
   done # TEST
-
-  # generate summary
-  ./generateSummary.sh && rm ../public_html/summary/ -rf && cp summary/ ../public_html/ -rf
 done # COMMIT
 
 # generate summary
-#./generateSummary.sh && cp summary/ ../public_html/ -rf
+./generateSummary.sh && cp summary/ ../public_html/ -rf
