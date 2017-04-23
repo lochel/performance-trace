@@ -18,7 +18,7 @@ do
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
   echo "model: $TEST" >> $HTML_FILE_SUMMARY
 
-  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n | tail -n20)
+  FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n)
   FIRST_FILE=$(echo $FILES | awk '{print $1;}')
   ID=0
 
