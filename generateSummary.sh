@@ -31,7 +31,7 @@ do
     do
       echo -n "<tr><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OpenModelica-).*' $FILE)</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OMCompiler-).*' $FILE)</a></td>" >> $HTML_FILE
       echo -n "$(grep -o -m1 -P '(?<=OpenModelica-timestamp: ).*' $FILE) " >> temp.dat
-      grep -o -m1 -P "(?<=Notification: Performance of $(echo PHASE | sed 's/(/\\(/g;s/)/\\)/g'): time).*" $FILE | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
+      grep "Notification: Performance of $PHASE: time" $FILE | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
       do
         echo -n "<td>$LINE</td>" >> $HTML_FILE
         # handle units
