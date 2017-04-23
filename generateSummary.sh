@@ -25,13 +25,14 @@ do
     echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
     echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
     echo "<table border=\"1\">" >> $HTML_FILE
-    echo "<td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
+    echo "<td>date</td><td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
     echo -n > temp.dat
     for FILE in $FILES
     do
-      echo -n "<tr><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OpenModelica-).*' $FILE)</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OMCompiler-).*' $FILE)</a></td>" >> $HTML_FILE
-      echo -n "$(grep -o -m1 -P '(?<=OpenModelica-timestamp: ).*' $FILE) " >> temp.dat
-      grep "Notification: Performance of $PHASE: time" $FILE | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
+      TIMESTAMP=$(grep -o -m1 -P '(?<=OpenModelica-timestamp: ).*' $FILE)
+      echo -n "<tr><td>$(date -d @$TIMESTAMP +'%m/%d-%y %H:%M')</td><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OpenModelica-).*' $FILE)</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OMCompiler-).*' $FILE)</a></td>" >> $HTML_FILE
+      echo -n "$TIMESTAMP " >> temp.dat
+      grep -m1 "Notification: Performance of $PHASE: time" $FILE | grep -o -P '(?<=: time).*' | grep -o -E '\-?[0-9]+(,[0-9]+)*(\.[0-9]+(e\-?[0-9]+)?)?( kB| MB| GB| TB)?' | while read LINE
       do
         echo -n "<td>$LINE</td>" >> $HTML_FILE
         # handle units
