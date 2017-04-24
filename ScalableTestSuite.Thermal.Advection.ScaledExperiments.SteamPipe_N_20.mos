@@ -1,0 +1,4 @@
+loadModel(ScalableTestSuite); getErrorString();
+setCommandLineOptions("-d=execstat"); getErrorString();
+translateModel(ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_20); getErrorString();
+//buildModel(ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_20); getErrorString();
