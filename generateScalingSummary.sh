@@ -11,7 +11,7 @@ echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>
 echo "<h1>OpenModelica - Scaling Overview</h1>" >> $HTML_FILE
 echo "model class: $TEST_CLASS" >> $HTML_FILE
 
-FIRST_FILE=$(ls dumps/ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_2560/$TEST_CLASS*.txt | sort -n | tail -n1)
+FIRST_FILE=$(ls dumps/$TEST_CLASS"_N_2560/"$TEST_CLASS"_N_"*.txt | sort -n | tail -n1)
 ID=0
 
 grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
@@ -28,7 +28,7 @@ do
 
   for TEST in $TESTS
   do
-    FILE=$(ls dumps/ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_$TEST/ScalableTestSuite.Thermal.Advection.ScaledExperiments.SteamPipe_N_$TEST-*.txt | sort -n | tail -n1)
+    FILE=$(ls dumps/$TEST_CLASS"_N_"$TEST/$TEST_CLASS"_N_"$TEST-*.txt | sort -n | tail -n1)
     TIMESTAMP=$(grep -o -m1 -P '(?<=OpenModelica-timestamp: ).*' $FILE)
     echo -n "<tr><td>$(date -d @$TIMESTAMP +'%m/%d-%y %H:%M')</td><td><a href=\"https://github.com/OpenModelica/OpenModelica/commit/$(grep OpenModelica- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OpenModelica-).*' $FILE)</a></td><td><a href=\"https://github.com/OpenModelica/OMCompiler/commit/$(grep OMCompiler- $FILE | head -n1 | grep -o -P '(?<=-g).*')\">$(grep -o -m1 -P '(?<=OMCompiler-).*' $FILE)</a></td><td>$TEST</td>" >> $HTML_FILE
     echo -n "$TEST " >> temp.dat
@@ -47,18 +47,18 @@ do
     echo >> temp.dat
     echo -n "</tr>" >> $HTML_FILE
   done # TEST
-    gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
-      set key right bottom;
-      set grid;
-      set notitle;
-      set output 'summary/$TEST_CLASS/plot-$ID.png';
-      set pointsize 1;
-      set yrange [0:*];
-      set ytics;
-      set y2range [0:*];
-      set y2tics;
-      plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
+  gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
+    set key right bottom;
+    set grid;
+    set notitle;
+    set output 'summary/$TEST_CLASS/plot-$ID.png';
+    set pointsize 1;
+    set yrange [0:*];
+    set ytics;
+    set y2range [0:*];
+    set y2tics;
+    plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
 done # PHASE
 
- echo "</table>" >> $HTML_FILE
- echo "</body></html>" >> $HTML_FILE
+echo "</table>" >> $HTML_FILE
+echo "</body></html>" >> $HTML_FILE
