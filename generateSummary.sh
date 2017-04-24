@@ -66,8 +66,6 @@ do
         set pointsize 1;
         set timefmt '%s';
         set xdata time;
-        set xtics rotate;
-        set xtics 172800;
         set yrange [0:*];
         set ytics;
         set y2range [0:*];
@@ -88,8 +86,6 @@ do
     set pointsize 1;
     set timefmt '%s';
     set xdata time;
-    set xtics rotate;
-    set xtics 172800;
     set yrange [0:*];
     set ytics;
     set y2range [0:*];
