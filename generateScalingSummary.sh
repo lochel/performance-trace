@@ -11,6 +11,9 @@ echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>
 echo "<h1>OpenModelica - Scaling Overview</h1>" >> $HTML_FILE
 echo "model class: $TEST_CLASS" >> $HTML_FILE
 
+echo "<h2>Summary</h2>" >> $HTML_FILE
+echo "<img src=\"plot-0.png\">" >> $HTML_FILE
+
 FIRST_FILE=$(ls dumps/$TEST_CLASS"_N_2560/"$TEST_CLASS"_N_"*.txt | sort -n | tail -n1)
 TESTS=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n)
 ID=0
@@ -62,4 +65,17 @@ do
   echo "</table>" >> $HTML_FILE
 done # PHASE
 
+# generate summary plots
+gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
+  set key right bottom;
+  set grid;
+  set notitle;
+  set output 'summary/$TEST_CLASS/plot-0.png';
+  set pointsize 1;
+  set xrange [0:*];
+  set yrange [0:*];
+  set ytics;
+  set y2range [0:*];
+  set y2tics;
+  plot 'temp.dat' using 1:3 title 'time' with linespoints, 'temp.dat' using 1:5 title 'allocations' with linespoints axes x1y2"
 echo "</body></html>" >> $HTML_FILE
