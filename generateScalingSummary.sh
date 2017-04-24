@@ -58,7 +58,7 @@ do
     set ytics;
     set y2range [0:*];
     set y2tics;
-    plot 'temp.dat' using 1:2 title 'time' with linepoints, 'temp.dat' using 1:4 title 'allocations' with linepoints axes x1y2"
+    plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
   echo "</table>" >> $HTML_FILE
 done # PHASE
 
