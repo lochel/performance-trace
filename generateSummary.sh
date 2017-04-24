@@ -9,7 +9,7 @@ for TEST in $TESTS
 do
   mkdir -p summary/$TEST/
 
-  HTML_FILE_SUMMARY=summary/$TEST/summary.html
+  HTML_FILE_SUMMARY=summary/$TEST/index.html
   echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE_SUMMARY
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
   echo "model: $TEST" >> $HTML_FILE_SUMMARY
@@ -28,7 +28,7 @@ do
     HTML_FILE=summary/$TEST/plot-$ID.html
     echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
     echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
-    echo "model: $TEST (<a href=\"./summary.html\">back to summary</a>)" >> $HTML_FILE
+    echo "model: $TEST (<a href=\"./index.html\">back to summary</a>)" >> $HTML_FILE
     echo "<h2>$PHASE</h2>" >> $HTML_FILE
     echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
 
