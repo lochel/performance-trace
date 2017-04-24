@@ -20,6 +20,7 @@ ID=0
 
 grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
 do
+  PHASE=$(echo $PHASE | grep -o -m1 -P '.*(?=\(n=)')
   ID=$((ID+1))
 
   echo "<h2>$PHASE</h2>" >> $HTML_FILE
