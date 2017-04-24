@@ -12,6 +12,7 @@ echo "<h1>OpenModelica - Scaling Overview</h1>" >> $HTML_FILE
 echo "model class: $TEST_CLASS" >> $HTML_FILE
 
 FIRST_FILE=$(ls dumps/$TEST_CLASS"_N_2560/"$TEST_CLASS"_N_"*.txt | sort -n | tail -n1)
+TESTS=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n)
 ID=0
 
 grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
@@ -24,7 +25,6 @@ do
   echo "<table border=\"1\">" >> $HTML_FILE
   echo "<td>date</td><td>OpenModelica</td><td>OMCompiler</td><td>N</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
   echo -n > temp.dat
-  TESTS=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n)
 
   for TEST in $TESTS
   do
@@ -53,12 +53,13 @@ do
     set notitle;
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
+    set xrange [0:*];
     set yrange [0:*];
     set ytics;
     set y2range [0:*];
     set y2tics;
-    plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
+    plot 'temp.dat' using 1:2 title 'time' with linepoints, 'temp.dat' using 1:4 title 'allocations' with linepoints axes x1y2"
+  echo "</table>" >> $HTML_FILE
 done # PHASE
 
-echo "</table>" >> $HTML_FILE
 echo "</body></html>" >> $HTML_FILE
