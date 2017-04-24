@@ -74,4 +74,4 @@ do
 done # COMMIT
 
 # generate summary
-./generateSummary.sh && cp summary/ ../public_html/ -rf
+./generateSummary.sh && ./generateScalingSummary.sh && cp summary/ ../public_html/ -rf
