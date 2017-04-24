@@ -23,26 +23,18 @@ do
   ID=0
 
   echo "<h2>Summary</h2>" >> $HTML_FILE
-  echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
-  echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
-  #echo "<img src=\"$TEST-free-$ID.png\">" >> $HTML_FILE
+  echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
 
   echo "<h2>Summary</h2>" >> $HTML_FILE_SUMMARY
-  echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE_SUMMARY
-  echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE_SUMMARY
-  #echo "<img src=\"$TEST-free-$ID.png\">" >> $HTML_FILE_SUMMARY
+  echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE_SUMMARY
 
   grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
   do
     echo "<h2>$PHASE</h2>" >> $HTML_FILE
     echo "<h2>$PHASE</h2>" >> $HTML_FILE_SUMMARY
     ID=$((ID+1))
-    echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE
-    echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE
-    #echo "<img src=\"$TEST-free-$ID.png\">" >> $HTML_FILE
-    echo "<img src=\"$TEST-time-$ID.png\">" >> $HTML_FILE_SUMMARY
-    echo "<img src=\"$TEST-allocations-$ID.png\">" >> $HTML_FILE_SUMMARY
-    #echo "<img src=\"$TEST-free-$ID.png\">" >> $HTML_FILE_SUMMARY
+    echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
+    echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE_SUMMARY
     echo "<table border=\"1\">" >> $HTML_FILE
     echo "<td>date</td><td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
     echo -n > temp.dat
@@ -66,17 +58,43 @@ do
       echo >> temp.dat
       echo -n "</tr>" >> $HTML_FILE
     done # FILE
-    gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:2 notitle with lines;"
-    gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:4 notitle with lines;"
-    #gnuplot -p -e "set title 'free' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-free-$ID.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:6 notitle with lines;"
+      gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
+        set format x '%m/%d-%y';
+        set key right bottom;
+        set grid;
+        set notitle;
+        set output 'summary/$TEST/plot-$ID.png';
+        set pointsize 1;
+        set timefmt '%s';
+        set xdata time;
+        set xtics rotate;
+        set xtics 172800;
+        set yrange [0:*];
+        set ytics;
+        set y2range [0:*];
+        set y2tics;
+        plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
 
     echo "</table>" >> $HTML_FILE
   done # PHASE
 
   # generate summary plots
-  gnuplot -p -e "set title 'time' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-time-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:3 notitle with lines;"
-  gnuplot -p -e "set title 'allocations' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-allocations-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:5 notitle with lines;"
-  #gnuplot -p -e "set title 'free' font ',14' textcolor rgbcolor 'royalblue'; set pointsize 1; set terminal pngcairo size 480,360 enhanced font 'Verdana,10'; set output 'summary/$TEST/$TEST-free-0.png'; set xtics rotate; set timefmt '%s'; set format x '%m/%d-%y'; set xdata time; set yrange [0:*]; set grid; plot 'temp.dat' using 1:7 notitle with lines;"
+  gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
+    set format x '%m/%d-%y';
+    set key right bottom;
+    set grid;
+    set notitle;
+    set output 'summary/$TEST/plot-0.png';
+    set pointsize 1;
+    set timefmt '%s';
+    set xdata time;
+    set xtics rotate;
+    set xtics 172800;
+    set yrange [0:*];
+    set ytics;
+    set y2range [0:*];
+    set y2tics;
+    plot 'temp.dat' using 1:3 title 'time' with lines, 'temp.dat' using 1:5 title 'allocations' with lines axes x1y2"
 
   echo "</body></html>" >> $HTML_FILE
   echo "</body></html>" >> $HTML_FILE_SUMMARY
