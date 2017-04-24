@@ -8,10 +8,6 @@ TESTS=$(ls *.mos | rev | cut -c 5- | rev)
 for TEST in $TESTS
 do
   mkdir -p summary/$TEST/
-  HTML_FILE=summary/$TEST/$TEST.html
-  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
-  echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
-  echo "model: $TEST" >> $HTML_FILE
 
   HTML_FILE_SUMMARY=summary/$TEST/$TEST-summary.html
   echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE_SUMMARY
@@ -22,19 +18,23 @@ do
   FIRST_FILE=$(echo $FILES | awk '{print $1;}')
   ID=0
 
-  echo "<h2>Summary</h2>" >> $HTML_FILE
-  echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
-
   echo "<h2>Summary</h2>" >> $HTML_FILE_SUMMARY
   echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE_SUMMARY
 
   grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
   do
-    echo "<h2>$PHASE</h2>" >> $HTML_FILE
-    echo "<h2>$PHASE</h2>" >> $HTML_FILE_SUMMARY
     ID=$((ID+1))
+
+    HTML_FILE=summary/$TEST/plot-$ID.html
+    echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
+    echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
+    echo "model: $TEST (<a href=\"./$TEST-summary.html\">back to summary</a>)" >> $HTML_FILE
+    echo "<h2>$PHASE</h2>" >> $HTML_FILE
     echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
-    echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE_SUMMARY
+
+    echo "<h2>$PHASE</h2>" >> $HTML_FILE_SUMMARY
+    echo "<img src=\"plot-$ID.png\">" >> $HTML_FILE
+    echo "<a href=\"./plot-$ID.html\"><img src=\"plot-$ID.png\"></a>" >> $HTML_FILE_SUMMARY
     echo "<table border=\"1\">" >> $HTML_FILE
     echo "<td>date</td><td>OpenModelica</td><td>OMCompiler</td><td>time</td><td>accumulated time</td><td>allocations</td><td>accumulated allocations</td><td>free</td><td>accumulated free</td>" >> $HTML_FILE
     echo -n > temp.dat
@@ -76,6 +76,7 @@ do
         plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
 
     echo "</table>" >> $HTML_FILE
+    echo "</body></html>" >> $HTML_FILE
   done # PHASE
 
   # generate summary plots
@@ -96,6 +97,5 @@ do
     set y2tics;
     plot 'temp.dat' using 1:3 title 'time' with lines, 'temp.dat' using 1:5 title 'allocations' with lines axes x1y2"
 
-  echo "</body></html>" >> $HTML_FILE
   echo "</body></html>" >> $HTML_FILE_SUMMARY
 done # TEST
