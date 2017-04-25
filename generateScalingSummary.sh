@@ -16,6 +16,8 @@ echo "<img src=\"plot-0.png\">" >> $HTML_FILE
 
 FIRST_FILE=$(ls dumps/$TEST_CLASS"_N_2560/"$TEST_CLASS"_N_"*.txt | sort -n | tail -n1)
 TESTS=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n)
+VERSION="OpenModelica $(grep -o -m1 -P '(?<=OpenModelica-).*' $FIRST_FILE)"
+MAX_SIZE=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n | tail -n1)
 ID=0
 
 grep -o -P '(?<=Notification: Performance of ).*(?=: time)' $FIRST_FILE | while read PHASE
@@ -55,11 +57,11 @@ do
   gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
     set key right bottom;
     set grid;
-    set title '$PHASE';
+    set title '$PHASE ($VERSION)';
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
     set xlabel 'N';
-    set xrange [0:$TEST];
+    set xrange [0:$MAX_SIZE];
     set ylabel 'time [s]';
     set yrange [0:*];
     set ytics;
@@ -74,11 +76,11 @@ done # PHASE
 gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set key right bottom;
   set grid;
-  set title 'overall view';
+  set title 'overall view ($VERSION)';
   set output 'summary/$TEST_CLASS/plot-0.png';
   set pointsize 1;
   set xlabel 'N';
-  set xrange [0:$TEST];
+  set xrange [0:$MAX_SIZE];
   set ylabel 'time [s]';
   set yrange [0:*];
   set ytics;
