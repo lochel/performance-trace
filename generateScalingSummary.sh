@@ -57,10 +57,10 @@ do
   gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
     set key right bottom;
     set grid;
-    set title '$PHASE ($VERSION)';
+    set title '$PHASE [$VERSION]';
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
-    set xlabel 'N';
+    set xlabel 'N [$TEST_CLASS]';
     set xrange [0:$MAX_SIZE];
     set ylabel 'time [s]';
     set yrange [0:*];
@@ -76,10 +76,10 @@ done # PHASE
 gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set key right bottom;
   set grid;
-  set title 'overall view ($VERSION)';
+  set title '$VERSION';
   set output 'summary/$TEST_CLASS/plot-0.png';
   set pointsize 1;
-  set xlabel 'N';
+  set xlabel 'N [$TEST_CLASS]';
   set xrange [0:$MAX_SIZE];
   set ylabel 'time [s]';
   set yrange [0:*];
