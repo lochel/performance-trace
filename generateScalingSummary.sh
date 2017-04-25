@@ -7,7 +7,7 @@ echo "Generating scaling report for $TEST_CLASS"
 mkdir -p summary/$TEST_CLASS
 HTML_FILE=summary/$TEST_CLASS/index.html
 
-echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
+echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body><center>" > $HTML_FILE
 echo "<h1>OpenModelica - Scaling Overview</h1>" >> $HTML_FILE
 echo "model class: $TEST_CLASS" >> $HTML_FILE
 
@@ -88,4 +88,4 @@ gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set y2range [0:*];
   set y2tics;
   plot 'temp.dat' using 1:3 title 'time' with linespoints, 'temp.dat' using 1:5 title 'allocations' with linespoints axes x1y2"
-echo "</body></html>" >> $HTML_FILE
+echo "</center></body></html>" >> $HTML_FILE
