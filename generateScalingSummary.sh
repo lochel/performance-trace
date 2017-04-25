@@ -59,7 +59,7 @@ do
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
     set xlabel 'N';
-    set xrange [0:*];
+    set xrange [0:$TEST];
     set ylabel 'time [s]';
     set yrange [0:*];
     set ytics;
@@ -78,7 +78,7 @@ gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set output 'summary/$TEST_CLASS/plot-0.png';
   set pointsize 1;
   set xlabel 'N';
-  set xrange [0:*];
+  set xrange [0:$TEST];
   set ylabel 'time [s]';
   set yrange [0:*];
   set ytics;
