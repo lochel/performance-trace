@@ -77,3 +77,5 @@ done # COMMIT
 if [ ! -z "$COMMITS" ]; then
   ./generateSummary.sh && ./generateScalingSummary.sh && cp summary/ ../public_html/ -rf
 fi
+
+echo "done"

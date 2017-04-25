@@ -10,8 +10,8 @@ do
   mkdir -p summary/$TEST/
 
   HTML_FILE_SUMMARY=summary/$TEST/index.html
-  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body><center>" > $HTML_FILE_SUMMARY
-  echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
+  echo "<html><head><title>Performance Trace</title><body><center>" > $HTML_FILE_SUMMARY
+  echo "<h1>OpenModelica - Performance Trace</h1>" >> $HTML_FILE_SUMMARY
   echo "model: $TEST" >> $HTML_FILE_SUMMARY
 
   FILES=$(ls dumps/$TEST/$TEST-*.txt | sort -n)
