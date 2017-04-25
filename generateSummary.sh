@@ -10,7 +10,7 @@ do
   mkdir -p summary/$TEST/
 
   HTML_FILE_SUMMARY=summary/$TEST/index.html
-  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE_SUMMARY
+  echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body><center>" > $HTML_FILE_SUMMARY
   echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE_SUMMARY
   echo "model: $TEST" >> $HTML_FILE_SUMMARY
 
@@ -26,7 +26,7 @@ do
     ID=$((ID+1))
 
     HTML_FILE=summary/$TEST/plot-$ID.html
-    echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body>" > $HTML_FILE
+    echo "<html><head><title>OpenModelica - Performance Trace Overview</title><body><center>" > $HTML_FILE
     echo "<h1>OpenModelica - Performance Trace Overview</h1>" >> $HTML_FILE
     echo "model: $TEST (<a href=\"./index.html\">back to summary</a>)" >> $HTML_FILE
     echo "<h2>$PHASE</h2>" >> $HTML_FILE
@@ -61,19 +61,22 @@ do
         set format x '%m/%d-%y';
         set key right bottom;
         set grid;
-        set notitle;
+        set title '$PHASE';
         set output 'summary/$TEST/plot-$ID.png';
         set pointsize 1;
         set timefmt '%s';
+        set xlabel '$TEST';
         set xdata time;
+        set ylabel 'time [s]';
         set yrange [0:*];
         set ytics;
+        set y2label 'allocations [B]';
         set y2range [0:*];
         set y2tics;
         plot 'temp.dat' using 1:2 title 'time' with lines, 'temp.dat' using 1:4 title 'allocations' with lines axes x1y2"
 
     echo "</table>" >> $HTML_FILE
-    echo "</body></html>" >> $HTML_FILE
+    echo "</center></body></html>" >> $HTML_FILE
   done # PHASE
 
   # generate summary plots
@@ -81,16 +84,19 @@ do
     set format x '%m/%d-%y';
     set key right bottom;
     set grid;
-    set notitle;
+    set title 'OpenModelica Compiler';
     set output 'summary/$TEST/plot-0.png';
     set pointsize 1;
     set timefmt '%s';
+    set xlabel '$TEST';
     set xdata time;
+    set ylabel 'time [s]';
     set yrange [0:*];
     set ytics;
+    set y2label 'allocations [B]';
     set y2range [0:*];
     set y2tics;
     plot 'temp.dat' using 1:3 title 'time' with lines, 'temp.dat' using 1:5 title 'allocations' with lines axes x1y2"
 
-  echo "</body></html>" >> $HTML_FILE_SUMMARY
+  echo "</center></body></html>" >> $HTML_FILE_SUMMARY
 done # TEST
