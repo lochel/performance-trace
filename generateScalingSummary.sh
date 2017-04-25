@@ -55,12 +55,15 @@ do
   gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
     set key right bottom;
     set grid;
-    set notitle;
+    set title '$PHASE';
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
+    set xlabel 'N';
     set xrange [0:*];
+    set ylabel 'time [s]';
     set yrange [0:*];
     set ytics;
+    set y2label 'allocations [byte]';
     set y2range [0:*];
     set y2tics;
     plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
@@ -71,12 +74,15 @@ done # PHASE
 gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set key right bottom;
   set grid;
-  set notitle;
+  set title 'overall view';
   set output 'summary/$TEST_CLASS/plot-0.png';
   set pointsize 1;
+  set xlabel 'N';
   set xrange [0:*];
+  set ylabel 'time [s]';
   set yrange [0:*];
   set ytics;
+  set y2label 'allocations [byte]';
   set y2range [0:*];
   set y2tics;
   plot 'temp.dat' using 1:3 title 'time' with linespoints, 'temp.dat' using 1:5 title 'allocations' with linespoints axes x1y2"
