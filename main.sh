@@ -74,4 +74,6 @@ do
 done # COMMIT
 
 # generate summary
-./generateSummary.sh && ./generateScalingSummary.sh && cp summary/ ../public_html/ -rf
+if [ ! -z "$COMMITS" ]; then
+  ./generateSummary.sh && ./generateScalingSummary.sh && cp summary/ ../public_html/ -rf
+fi
