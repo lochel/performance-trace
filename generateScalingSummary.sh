@@ -12,7 +12,7 @@ echo "<h1>OpenModelica - Scaling Overview</h1>" >> $HTML_FILE
 echo "model class: $TEST_CLASS" >> $HTML_FILE
 
 echo "<h2>Summary</h2>" >> $HTML_FILE
-echo "<img src=\"plot-0.png\"><hr />" >> $HTML_FILE
+echo "<img src=\"plot-0.png\"><br />" >> $HTML_FILE
 
 FIRST_FILE=$(ls dumps/$TEST_CLASS"_N_2560/"$TEST_CLASS"_N_"*.txt | sort -n | tail -n1)
 TESTS=$(ls dumps/$TEST_CLASS* -d | grep -o -P '(?<=_N_).*' | sort -n)
@@ -69,7 +69,7 @@ do
     set y2range [0:*];
     set y2tics;
     plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
-  echo "</table><hr />" >> $HTML_FILE
+  echo "</table><br />" >> $HTML_FILE
 done # PHASE
 
 # generate summary plots
