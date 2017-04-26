@@ -55,7 +55,8 @@ do
     echo >> temp.dat
     echo -n "</tr>" >> $HTML_FILE
   done # TEST
-  MAX_ALLOCATION=$(cut -d' ' -f2 temp.dat | sort -nr | head -n1)
+
+  MAX_ALLOCATION=$(cut -d' ' -f4 temp.dat | sort -nr | head -n1)
   if [ "$MAX_ALLOCATION" = "0" ]; then
     LOGSCALE="xy"
   else
