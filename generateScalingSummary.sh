@@ -44,7 +44,7 @@ do
     do
       echo -n "<td>$LINE</td>" >> $HTML_FILE
       # handle units
-      LINE=$(echo $LINE | sed '
+      LINE=$(echo "$LINE+1" | sed '
         s/[eE]+*/\*10\^/g;
         s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) kB/\1*1000/g;
         s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) MB/\1*1000000/g;
@@ -62,13 +62,14 @@ do
     set output 'summary/$TEST_CLASS/plot-$ID.png';
     set pointsize 1;
     set xlabel 'N [$TEST_CLASS]';
-    set xrange [0:$MAX_SIZE];
+    set xrange [*:$MAX_SIZE];
     set ylabel 'time [s]';
-    set yrange [0:*];
+    set yrange [*:*];
     set ytics;
     set y2label 'allocations [B]';
-    set y2range [0:*];
+    set y2range [*:*];
     set y2tics;
+    set logscale xyy2;
     plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
   echo "</table><br />" >> $HTML_FILE
 done # PHASE
@@ -81,12 +82,13 @@ gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
   set output 'summary/$TEST_CLASS/plot-0.png';
   set pointsize 1;
   set xlabel 'N [$TEST_CLASS]';
-  set xrange [0:$MAX_SIZE];
+  set xrange [*:$MAX_SIZE];
   set ylabel 'time [s]';
-  set yrange [0:*];
+  set yrange [*:*];
   set ytics;
   set y2label 'allocations [B]';
-  set y2range [0:*];
+  set y2range [*:*];
   set y2tics;
+  set logscale xyy2;
   plot 'temp.dat' using 1:3 title 'time' with linespoints, 'temp.dat' using 1:5 title 'allocations' with linespoints axes x1y2"
 echo "</center></body></html>" >> $HTML_FILE
