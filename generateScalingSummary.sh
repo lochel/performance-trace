@@ -55,6 +55,13 @@ do
     echo >> temp.dat
     echo -n "</tr>" >> $HTML_FILE
   done # TEST
+  MAX_ALLOCATION=$(cut -d' ' -f2 temp.dat | sort -nr | head -n1)
+  if [ "$MAX_ALLOCATION" = "0" ]; then
+    LOGSCALE="xy"
+  else
+    LOGSCALE="xyy2"
+  fi
+
   gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
     set key right bottom;
     set grid;
@@ -69,7 +76,7 @@ do
     set y2label 'allocations [B]';
     set y2range [*:*];
     set y2tics;
-    set logscale xyy2;
+    set logscale $LOGSCALE;
     plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
   echo "</table><br />" >> $HTML_FILE
 done # PHASE
