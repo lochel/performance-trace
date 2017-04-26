@@ -44,7 +44,7 @@ do
     do
       echo -n "<td>$LINE</td>" >> $HTML_FILE
       # handle units
-      LINE=$(echo "$LINE+1" | sed '
+      LINE=$(echo $LINE | sed '
         s/[eE]+*/\*10\^/g;
         s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) kB/\1*1000/g;
         s/\([0-9][0-9]*\(\.[0-9]\+\)\?\) MB/\1*1000000/g;
