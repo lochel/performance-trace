@@ -59,8 +59,10 @@ do
   MAX_ALLOCATION=$(cut -d' ' -f4 temp.dat | sort -nr | head -n1)
   if [ "$MAX_ALLOCATION" = "0" ]; then
     LOGSCALE="xy"
+    Y2_MIN="0"
   else
     LOGSCALE="xyy2"
+    Y2_MIN="*"
   fi
 
   gnuplot -p -e "set terminal pngcairo size 1200,400 enhanced font 'Verdana,10';
@@ -75,7 +77,7 @@ do
     set yrange [*:*];
     set ytics;
     set y2label 'allocations [B]';
-    set y2range [*:*];
+    set y2range [$Y2_MIN:*];
     set y2tics;
     set logscale $LOGSCALE;
     plot 'temp.dat' using 1:2 title 'time' with linespoints, 'temp.dat' using 1:4 title 'allocations' with linespoints axes x1y2"
